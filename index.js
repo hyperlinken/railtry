@@ -1,16 +1,15 @@
 const express = require("express")
-const http=require('http');
 const socketIo=require('socket.io');
-const axios = require('axios');
 const cors = require('cors');
 
 const app= express();
 
-app.use(cors({
-    origin: 'https://hyperlinken.github.io', // Allow your frontend origin
-    methods: ['GET', 'POST'],
-    credentials: true,
-}));
+const io = socketIo(server, { // Initialize Socket.IO with the server
+    cors: {
+        origin: 'https://hyperlinken.github.io',
+        methods: ['GET', 'POST'],
+    }
+});
 
 app.get("/hi" , (req , res)=> {
     res.send("hi");
