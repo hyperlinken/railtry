@@ -7,14 +7,14 @@ const app= express();
 const server = http.createServer(app);
 
 app.use(cors({
-    origin: 'https://hyperlinken.github.io', // Allow your frontend origin
+    origin: 'https://hyperlinken.github.io/frontend/', // Allow your frontend origin
     methods: ['GET', 'POST'],
     credentials: true,
 }));
 
 const io = socketIo(server, {
     cors: {
-        origin: 'https://hyperlinken.github.io',
+        origin: 'https://hyperlinken.github.io/frontend/',
         methods: ['GET', 'POST'],
     }
 });
