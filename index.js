@@ -1,10 +1,10 @@
 const express = require("express")
-const http=require('http');
-const socketIo=require('socket.io');
-const cors = require('cors');
+// const http=require('http');
+// const socketIo=require('socket.io');
+// const cors = require('cors');
 
 const app= express();
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 // app.use(cors({
 //     origin: 'https://hyperlinken.github.io/frontend', // Allow your frontend origin
@@ -19,6 +19,6 @@ app.get("/hi" , (req , res)=> {
 
 
 const port=process.env.PORT || 5000;
-app.listen( port , () =>{
+app.listen( port , "0.0.0.0" , () =>{
     console.log("server is running");
 })
