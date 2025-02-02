@@ -2,9 +2,32 @@ const express = require("express")
 const http=require('http');
 const socketIo=require('socket.io');
 const cors = require('cors');
+const mongoose=require('mongoose');
 
 const app= express();
 const server = http.createServer(app);
+
+const DB="mongodb+srv://saurav:53846766@cluster0.jgcxc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+
+mongoose.connect(DB).then(()=>{
+    console.log("connection successfully");
+}).catch((e)=>{
+    console.log(e);
+})
+
+const messageSchema=new mongoose.Schema({
+    message:{
+        type: String,
+    },
+    date:{
+        type: Date,
+        required: true,
+    }
+})
+
+messageSchema.index({date:1},{expireAfterSeconds: 86000});
+const user= mongoose.model('user',messageSchema);
 
 app.use(cors({
     origin: 'https://hyperlinken.github.io/frontend', // Allow your frontend origin
@@ -23,12 +46,23 @@ app.get("/hi" , (req , res)=> {
     res.send("hi");
 })
 
-io.on('connection',(socket)=>{
+io.on('connection',async (socket)=>{
     console.log('A new user connected:', socket.id);
 
-    socket.on('user-msg', (message) => {
-        console.log('Message received:', message);
+    const fe=await user.find({});
+    v=[];
+    fe.map((user)=>{
+        v.push(user.message);
+    })
+    socket.emit('start',v);
+
+    socket.on('user-msg', async (message) => {
         io.emit('msg', message); // ✅ Broadcast message to all clients
+
+        await user.create({
+            message: message,
+            date: Date.now(),
+        });
     });
 
     socket.on('disconnect', () => {
