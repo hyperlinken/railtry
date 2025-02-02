@@ -22,7 +22,7 @@ const messageSchema=new mongoose.Schema({
     },
     createdAt: { 
         type: Date,
-        expires: 3600,
+        expires: 43200,
         index: true,
         default: Date.now 
     },
