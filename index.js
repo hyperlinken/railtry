@@ -20,14 +20,14 @@ const messageSchema=new mongoose.Schema({
     message:{
         type: String,
     },
-    date:{
+    createdAt: { 
         type: Date,
-        default: Date.now, 
-        required: true,
-    }
+        expires: 60,
+        index: true,
+        default: Date.now 
+    },
 })
 
-messageSchema.index({date:1},{expireAfterSeconds: 3600});
 const user= mongoose.model('user',messageSchema);
 
 app.use(cors({
