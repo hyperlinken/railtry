@@ -22,11 +22,12 @@ const messageSchema=new mongoose.Schema({
     },
     date:{
         type: Date,
+        default: Date.now, 
         required: true,
     }
 })
 
-messageSchema.index({date:1},{expireAfterSeconds: 86000});
+messageSchema.index({date:1},{expireAfterSeconds: 3600});
 const user= mongoose.model('user',messageSchema);
 
 app.use(cors({
@@ -61,7 +62,6 @@ io.on('connection',async (socket)=>{
 
         await user.create({
             message: message,
-            date: Date.now(),
         });
     });
 
