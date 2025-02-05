@@ -9,7 +9,6 @@ const server = http.createServer(app);
 
 const DB="mongodb+srv://saurav:53846766@cluster0.jgcxc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-
 mongoose.connect(DB).then(()=>{
     console.log("connection successfully");
 }).catch((e)=>{
@@ -30,15 +29,17 @@ const messageSchema=new mongoose.Schema({
 
 const user= mongoose.model('user',messageSchema);
 
+allowedOrigin = 'https://hyperlinken.github.io/frontend'
+
 app.use(cors({
-    origin: 'https://hyperlinken.github.io/frontend', // Allow your frontend origin
+    origin: allowedOrigin,
     methods: ['GET', 'POST'],
     credentials: true,
 }));
 
 const io = socketIo(server, {
     cors: {
-        origin: 'https://hyperlinken.github.io/frontend',
+        origin: allowedOrigin,
         methods: ['GET', 'POST'],
     }
 });
@@ -48,6 +49,15 @@ app.get("/hi" , (req , res)=> {
 })
 
 io.on('connection',async (socket)=>{
+
+    const origin = socket.handshake.headers.origin;
+    
+    if (origin !== allowedOrigin) {
+        console.log(`Blocked unauthorized access from: ${origin}`);
+        socket.disconnect(true); // Disconnect unauthorized users
+        return;
+    }
+
     console.log('A new user connected:', socket.id);
 
     const fe=await user.find({});
