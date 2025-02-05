@@ -29,17 +29,15 @@ const messageSchema=new mongoose.Schema({
 
 const user= mongoose.model('user',messageSchema);
 
-allowedOrigin = 'https://hyperlinken.github.io/frontend'
-
 app.use(cors({
-    origin: allowedOrigin,
+    origin: 'https://hyperlinken.github.io/frontend',
     methods: ['GET', 'POST'],
     credentials: true,
 }));
 
 const io = socketIo(server, {
     cors: {
-        origin: allowedOrigin,
+        origin: 'https://hyperlinken.github.io/frontend',
         methods: ['GET', 'POST'],
     }
 });
