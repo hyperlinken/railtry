@@ -48,14 +48,6 @@ app.get("/hi" , (req , res)=> {
 
 io.on('connection',async (socket)=>{
 
-    const origin = socket.handshake.headers.origin;
-    
-    if (origin !== allowedOrigin) {
-        console.log(`Blocked unauthorized access from: ${origin}`);
-        socket.disconnect(true); // Disconnect unauthorized users
-        return;
-    }
-
     console.log('A new user connected:', socket.id);
 
     const fe=await user.find({});
