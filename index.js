@@ -7,7 +7,7 @@ const mongoose=require('mongoose');
 const app= express();
 const server = http.createServer(app);
 
-const DB="mongodb+srv://saurav:53846766@cluster0.jgcxc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const DB="mongodb+srv://hs26042004markam:26042004@cluster0.epdzw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 mongoose.connect(DB).then(()=>{
     console.log("connection successfully");
@@ -18,6 +18,10 @@ mongoose.connect(DB).then(()=>{
 const messageSchema=new mongoose.Schema({
     message:{
         type: String,
+    },
+    replied:{
+        type: String,
+        default: ""
     },
     createdAt: { 
         type: Date,
@@ -50,18 +54,17 @@ io.on('connection',async (socket)=>{
 
     console.log('A new user connected:', socket.id);
 
-    const fe=await user.find({});
-    v=[];
-    fe.map((user)=>{
-        v.push(user.message);
-    })
+    const fe= await user.find({});
+    const v = fe.map(user => ({ message: user.message, replied: user.replied }))
+
     socket.emit('start',v);
 
     socket.on('user-msg', async (message) => {
         io.emit('msg', message); // ✅ Broadcast message to all clients
 
         await user.create({
-            message: message,
+            message: message[0],
+            replied: message[1]
         });
     });
 
