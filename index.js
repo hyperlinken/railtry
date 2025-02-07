@@ -63,8 +63,8 @@ io.on('connection',async (socket)=>{
         io.emit('msg', message); // ✅ Broadcast message to all clients
 
         await user.create({
-            message: message[0],
-            replied: message[1]
+            message: message.message,
+            replied: message.replied
         });
     });
 
